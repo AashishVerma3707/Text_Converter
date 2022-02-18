@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import linkss
+from . import client
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',linkss.func1,name="func1"),
     path('processed',linkss.func2,name="processed"),
 path('Features',linkss.func3,name="Features"),
-path('Pricing',linkss.func4,name="Pricing")
+path('Pricing',linkss.func4,name="Pricing"),
+    path("blogR", linkss.blogR, name="blogR"),
+    path("blogR/body", client.body, name="body")
 ]

@@ -1,17 +1,18 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from textblob import TextBlob
 def func1(request):
     return render(request,"func1.html")
 
 def func2(request):
-  t
+
     djtext = request.GET.get('text', 'default')
 
     removepunc=request.GET.get('removepunc','off')
     fullcaps=request.GET.get('fullcaps','off')
     newlineremover=request.GET.get('newlineremover','off')
     extraspaceremover=request.GET.get('extraspaceremover','off')
+    spell_check = request.GET.get('spell_check', 'off')
 
     if removepunc == "on":
         punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
@@ -45,7 +46,17 @@ def func2(request):
                 analyzed = analyzed + char
         params ={ 'analyzed_text': analyzed}
         djtext = analyzed
-    l={"removepunc":removepunc,"fullcaps":fullcaps,"newlineremover":newlineremover,"extraspaceremover":extraspaceremover}
+
+    if spell_check=="on":
+        analyze=TextBlob(djtext)
+        analyzed=analyze.correct()
+        params={'analyzed_text':analyzed}
+        djtext = analyzed
+
+
+
+
+    l={"removepunc":removepunc,"fullcaps":fullcaps,"newlineremover":newlineremover,"extraspaceremover":extraspaceremover,"spell_check":spell_check}
     add=""
     for i,j in l.items():
         if j=="on":
@@ -58,3 +69,11 @@ def func3(request):
     return HttpResponse("Input your text, check your desired button and get the corresponding output")
 def func4(request):
     return HttpResponse("Absolutely Free")
+def blogR(request):
+    return render(request,"blog.html")
+def spellcheck(data):
+    analyze = TextBlob(data)
+    analyzed = analyze.correct()
+    return analyzed
+
+
